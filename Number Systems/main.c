@@ -14,21 +14,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_BINARY_LENGTH				1000
-#define HEX_DIGIT_SIZE					4
-#define BINARY_STR_LENGTH(NUM)			strlen(NUM)
-
-typedef uint32_t U32;
+#define MAX_BINARY_LENGTH   1000
+#define HEX_DIGIT_SIZE      4
+#define BINARY_STR_LENGTH(NUM)  strlen(NUM)
 
 typedef struct BINARY_NUMBER
 {
-	char* BINARY;
-	char* HEXADECIMAL;
-	char* OCTAL;
+    char* BINARY;
+    char* HEXADECIMAL;
+    char* OCTAL;
 
-	int DIGIT;
-	int WEIGHT;
+    int DIGIT;
+    int WEIGHT;
 };
+
+static BINARY_NUMBER* NUMBER;
+static int HEX_DIGITS;
 
 /* ASSUMING THAT THE LENGTH OF THE NUMBER IS EQUAL TO THE MAX SIZE */
 /* ALLOCATE MEMORY FOR THE HEX REPRESENTATION */
@@ -37,44 +38,65 @@ typedef struct BINARY_NUMBER
 
 static void BINARY_TO_HEX(BINARY_NUMBER* NUMBER)
 {
-	int LENGTH = BINARY_STR_LENGTH(NUMBER->BINARY);
-	int HEX_DIGITS = LENGTH / HEX_DIGIT_SIZE;
+    int LENGTH = BINARY_STR_LENGTH(NUMBER->BINARY);
+    int HEX_DIGITS = LENGTH / HEX_DIGIT_SIZE;
 
-	if (LENGTH % HEX_DIGIT_SIZE != 0) HEX_DIGITS++;
+    if (LENGTH % HEX_DIGIT_SIZE != 0) HEX_DIGITS++;
 
-	NUMBER->HEXADECIMAL = (char*)malloc(HEX_DIGITS + 1);
+    NUMBER->HEXADECIMAL = (char*)malloc(HEX_DIGITS + 1);
 
-	for (int i = LENGTH - 1, j = HEX_DIGITS - 1; i >= 0; i--, NUMBER->WEIGHT *= 2)
-	{
-		if (NUMBER->BINARY[i] == '1') NUMBER->DIGIT += NUMBER->WEIGHT;
+    for (int i = LENGTH - 1, j = HEX_DIGITS - 1; i >= 0; i--, NUMBER->WEIGHT *= 2)
+    {
+        if (NUMBER->BINARY[i] == '1') NUMBER->DIGIT += NUMBER->WEIGHT;
 
-		if (NUMBER->WEIGHT == 8 || i == 0)
-		{
-			if (NUMBER->DIGIT < 10)
-			{
-				sizeof(NUMBER->HEXADECIMAL[j] += '0' + NUMBER->DIGIT);
-			}
+        if (NUMBER->WEIGHT == 8 || i == 0)
+        {
+            if (NUMBER->DIGIT < 10)
+            {
+                NUMBER->HEXADECIMAL[j] = '0' + NUMBER->DIGIT; 
+            }
+            else
+            {
+                NUMBER->HEXADECIMAL[j] = 'A' + NUMBER->DIGIT - 10; 
+            }
 
-			else
-			{
-				sizeof(NUMBER->HEXADECIMAL[j] += 'A' + NUMBER->DIGIT - 10);
-			}
-		}
-	}
+            NUMBER->DIGIT = 0;
+            NUMBER->WEIGHT = 1;
+            j--;
+        }
+    }
 }
 
 /* ALLOCATE FOR THE CORRESPONDING AMOUNT OF DIGITS NEEDED FOR THE HEX STRING */
 
-static void INIT_HEX_STRING(BINARY_NUMBER* NUMBER, U32 HEX_DIGITS)
+static void INIT_HEX_STRING()
 {
-	memset(NUMBER->HEXADECIMAL, '0', HEX_DIGITS);
-	NUMBER->HEXADECIMAL[HEX_DIGITS] = '0';
-
+    memset(NUMBER->HEXADECIMAL, '0', HEX_DIGITS);
+    NUMBER->HEXADECIMAL[HEX_DIGITS] = '\0';
 }
 
 int main(int argc, char* argv[])
 {
-	BINARY_NUMBER NUMBER;
+    BINARY_NUMBER NUMBER;
+    NUMBER.BINARY = (char*)malloc(MAX_BINARY_LENGTH);
+    INIT_HEX_STRING();
 
-	BINARY_TO_HEX(&NUMBER);
+    if (!NUMBER.BINARY)
+    {
+        perror("Lmao you cannot convert this number, there must be a Seg Fault somewhere");
+        return 1;
+    }
+
+    printf("Enter a Binary Number: \n");
+    int RESULT = scanf("%s", NUMBER.BINARY);
+
+    BINARY_TO_HEX(&NUMBER);
+
+    printf("Hexadecimal Equivalent: %s\n", NUMBER.HEXADECIMAL);
+
+    free(NUMBER.BINARY);
+    free(NUMBER.HEXADECIMAL);
+
+    return 0;
+
 }
