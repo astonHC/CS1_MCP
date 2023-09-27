@@ -14,8 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_BINARY_LENGTH   1000
-#define HEX_DIGIT_SIZE      4
+#pragma warning(disable : 4996)
+
+#define MAX_BINARY_LENGTH              1000
+#define HEX_DIGIT_SIZE                    4
 #define BINARY_STR_LENGTH(NUM)  strlen(NUM)
 
 typedef struct BINARY_NUMBER
@@ -29,7 +31,7 @@ typedef struct BINARY_NUMBER
 };
 
 static BINARY_NUMBER* NUMBER;
-static int HEX_DIGITS;
+static int HEX_DIGITS = 0;
 
 /* ASSUMING THAT THE LENGTH OF THE NUMBER IS EQUAL TO THE MAX SIZE */
 /* ALLOCATE MEMORY FOR THE HEX REPRESENTATION */
@@ -68,11 +70,26 @@ static void BINARY_TO_HEX(BINARY_NUMBER* NUMBER)
 }
 
 /* ALLOCATE FOR THE CORRESPONDING AMOUNT OF DIGITS NEEDED FOR THE HEX STRING */
+/* THIS IS DONE BY ALLOCATING THE PRE-REQUISITE AMOUNT OF MEMORY NEEDED */
 
 static void INIT_HEX_STRING()
 {
-    memset(NUMBER->HEXADECIMAL, '0', HEX_DIGITS);
-    NUMBER->HEXADECIMAL[HEX_DIGITS] = '\0';
+    if (HEX_DIGITS > 0) 
+    {
+        NUMBER->HEXADECIMAL = (char*)malloc(HEX_DIGITS + 1);
+
+        if (NUMBER->HEXADECIMAL) 
+        {
+            memset(NUMBER->HEXADECIMAL, '0', HEX_DIGITS);
+            NUMBER->HEXADECIMAL[HEX_DIGITS] = '\0';
+        }
+
+        else 
+        {
+            perror("Memory allocation failed");
+            exit(1);
+        }
+    }
 }
 
 int main(int argc, char* argv[])
