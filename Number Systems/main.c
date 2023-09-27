@@ -9,7 +9,6 @@
 
 /* SYSTEM INCLUDES */
 
-#include <cstdint>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
