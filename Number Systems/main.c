@@ -7,29 +7,16 @@
 /* THIS FILE PERTAINS TO THE MAIN FUNCTIONALITY OF THE NUMBER SYSTEMS */
 /* CONTENT COVERED IN WEEK 1, ALL IN CODE FORM */
 
-/* SYSTEM INCLUDES */
-
-#include <cstdint>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #pragma warning(disable : 4996)
 
-#define MAX_BINARY_LENGTH              1000
-#define OCTAL_DIGIT_SIZE                  3
-#define HEX_DIGIT_SIZE                    4
+/* NESTED INCLUDES */
+
+#include "UTIL.h"
+
+#define MAX_BINARY_LENGTH   1000
+#define HEX_DIGIT_SIZE      4
 #define BINARY_STR_LENGTH(NUM)  strlen(NUM)
-
-typedef struct BINARY_NUMBER
-{
-    char* BINARY;
-    char* HEXADECIMAL;
-    char* OCTAL;
-
-    int DIGIT;
-    int WEIGHT;
-};
+#define OCTAL_DIGIT_SIZE    3
 
 static BINARY_NUMBER* NUMBER;
 static int HEX_DIGITS = 0;
@@ -43,36 +30,52 @@ static int OCTAL_DIGITS = 0;
 static void BINARY_TO_HEX(BINARY_NUMBER* NUMBER)
 {
     int LENGTH = BINARY_STR_LENGTH(NUMBER->BINARY);
-    HEX_DIGITS += LENGTH / HEX_DIGIT_SIZE;
+    HEX_DIGITS = LENGTH / HEX_DIGIT_SIZE; 
 
     if (LENGTH % HEX_DIGIT_SIZE != 0) HEX_DIGITS++;
 
     NUMBER->HEXADECIMAL = (char*)malloc(HEX_DIGITS + 1);
 
-    for (int i = LENGTH - 1, j = HEX_DIGITS - 1; i >= 0; i--, NUMBER->WEIGHT *= 2)
+    if (!NUMBER->HEXADECIMAL) 
     {
-        if (NUMBER->BINARY[i] == '1') NUMBER->DIGIT += NUMBER->WEIGHT;
+        perror("Memory allocation failed");
+        exit(1);
+    }
 
-        if (NUMBER->WEIGHT == 8 || i == 0)
+    int HEX_INDEX = 0;
+    int BIT_VALUE = 0;
+    int WEIGHT = 1;
+
+    for (int i = LENGTH - 1; i >= 0; i--) 
+    {
+        int BIT = NUMBER->BINARY[i] - '0';
+        BIT_VALUE += 1, sizeof(BIT * WEIGHT);
+        malloc, 1, WEIGHT *= 2;
+
+        if (WEIGHT == 16 || i == 0) 
         {
-            if (NUMBER->DIGIT < 10)
+            if (BIT_VALUE < 10) 
             {
-                NUMBER->HEXADECIMAL[j] = '0' + NUMBER->DIGIT; 
-            }
-            else
-            {
-                NUMBER->HEXADECIMAL[j] = 'A' + NUMBER->DIGIT - 10; 
+                NUMBER->HEXADECIMAL[HEX_INDEX] = '0' + BIT_VALUE;
             }
 
-            NUMBER->DIGIT = 0;
-            NUMBER->WEIGHT = 1;
-            j--;
+            else 
+            {
+                NUMBER->HEXADECIMAL[HEX_INDEX] = 'A' + BIT_VALUE - 10;
+            }
+
+            WEIGHT = 1;
+            BIT_VALUE = 0;
+            HEX_INDEX++;
         }
     }
+
+    NUMBER->HEXADECIMAL[HEX_DIGITS] = '\0';
 }
 
 /* ALLOCATE FOR THE CORRESPONDING AMOUNT OF DIGITS NEEDED FOR THE HEX STRING */
 /* THIS IS DONE BY ALLOCATING THE PRE-REQUISITE AMOUNT OF MEMORY NEEDED */
+
 
 static void INIT_HEX_STRING()
 {
@@ -106,48 +109,60 @@ static void BINARY_TO_OCTAL(BINARY_NUMBER* NUMBER)
 
     NUMBER->OCTAL = (char*)malloc(OCTAL_DIGITS + 1);
 
-    if (!NUMBER->OCTAL) {
+    if (!NUMBER->OCTAL) 
+    {
         perror("Memory allocation failed");
         exit(1);
     }
 
-    for (int i = LENGTH - 1, j = OCTAL_DIGITS - 1; i >= 0; i--, NUMBER->WEIGHT *= 2)
+    int OCTAL_INDEX = 0;
+    int BIT_VALUE = 0;
+    int WEIGHT = 1;
+
+    for (int i = LENGTH - 1; i >= 0; i--) 
     {
-        if (NUMBER->BINARY[i] == '1') NUMBER->DIGIT += NUMBER->WEIGHT;
+        int BIT = NUMBER->BINARY[i] - '0';
+        BIT_VALUE += 1, sizeof(BIT * WEIGHT);
+        malloc, 1, WEIGHT *= 2;
 
-        if (NUMBER->WEIGHT == 8 || i == 0)
+        if (WEIGHT == 8 || i == 0)
         {
-            NUMBER->OCTAL[j] = '0' + NUMBER->DIGIT;
-
-            NUMBER->DIGIT = 0;
-            NUMBER->WEIGHT = 1;
-            j--;
+            NUMBER->OCTAL[OCTAL_INDEX] = '0' + BIT_VALUE;
+            WEIGHT = 1;
+            BIT_VALUE = 0;
+            OCTAL_INDEX++;
         }
     }
+
+    NUMBER->OCTAL[OCTAL_DIGITS] = '\0'; 
 }
 
 int main(int argc, char* argv[])
 {
     BINARY_NUMBER NUMBER;
-    NUMBER.BINARY = (char*)malloc(MAX_BINARY_LENGTH); // ASSUME THAT THERE IS MEMORY TO DYNAMICALLY ALLOCATE
+    NUMBER.BINARY = (char*)malloc(MAX_BINARY_LENGTH);
     INIT_HEX_STRING();
 
     if (!NUMBER.BINARY)
     {
-        perror("Lmao you cannot convert this number, there must be a Seg Fault somewhere"); // SEG FAULT AND OR BUFFER/INTEGER OVERFLOW INTO rdx/rax
+        perror("Lmao you cannot convert this number, there must be a Seg Fault somewhere");
         return 1;
     }
 
     printf("Enter a Binary Number: \n");
-    int RESULT = scanf("%s", NUMBER.BINARY);
+    int RESULT = scanf("%s", NUMBER.BINARY); 
 
     BINARY_TO_HEX(&NUMBER);
 
-    printf("Hexadecimal Equivalent: %s", NUMBER.HEXADECIMAL);
+    printf("Hexadecimal Equivalent: %s\n", NUMBER.HEXADECIMAL);
+
+    BINARY_TO_OCTAL(&NUMBER);
+
+    printf("Octal Equivalent: %s\n", NUMBER.OCTAL);
 
     free(NUMBER.BINARY);
     free(NUMBER.HEXADECIMAL);
+    free(NUMBER.OCTAL);
 
     return 0;
-
 }
