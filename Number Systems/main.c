@@ -13,11 +13,6 @@
 
 #include "UTIL.h"
 
-#define MAX_BINARY_LENGTH   1000
-#define HEX_DIGIT_SIZE      4
-#define BINARY_STR_LENGTH(NUM)  strlen(NUM)
-#define OCTAL_DIGIT_SIZE    3
-
 static BINARY_NUMBER* NUMBER;
 static int HEX_DIGITS = 0;
 static int OCTAL_DIGITS = 0;
