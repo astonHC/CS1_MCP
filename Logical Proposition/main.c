@@ -4,10 +4,14 @@
 
 /* THIS FILE PERTAINS TO THE MAIN FUNCTIONALITY OF THE PROGRAM */
 
-/* SYSTEM INCLUDES */
-
 #ifndef BOOLEAN_CALC
 #define BOOLEAN_CALC
+
+/* NESTED INCLUDES */
+
+#include <util.h>
+
+/* SYSTEM INCLUDES */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +63,9 @@ static bool EVALUAATE_TYPE()
 {
     switch (EXP->EXP_BASE)
     {
+
+    // BLANK USE CASE FOR ASSUMING ARBITARY EXPRESSION
+
     case ' ':
         return EVALUAATE_TYPE(EXP->EXP_BASE + 1, sizeof(EXP));
 
@@ -67,6 +74,8 @@ static bool EVALUAATE_TYPE()
 
     case 'F':
         return false;
+
+
 
     default:
         break;
