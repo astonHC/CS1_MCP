@@ -54,6 +54,9 @@ static bool EVALUAATE_TYPE()
     case 'F':
         return false;
 
+    case 'A': case 'B': case 'C': // THREE ARGS ARE USUALLY PRESENT ON THE TUTORIAL QUESTIONS
+        return FIND_TYPE(1, sizeof(EXP));
+
     default:
         switch(EXP->EXP_BASE)
         {
@@ -62,6 +65,9 @@ static bool EVALUAATE_TYPE()
 
             case OR:
                 return EXP->EXP_READ_L || EXP->EXP_READ_R;
+
+            default:
+                return false;
         }
     }
 }
