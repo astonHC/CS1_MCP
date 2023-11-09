@@ -15,6 +15,20 @@
 
 #ifdef MATRIX_ARGS
 
-static MATRIX* GET_MATRIX;
+static MATRIX* MATRIX_OBJ;
+
+static void GET_MATRIX_ELEMENTS()
+{
+    for (int i = 0; i < MATRIX_OBJ->CONTENTS.ROWS; i++)
+    {
+        for (int j = 0; i < MATRIX_OBJ->CONTENTS.COLUMNS; j++)
+        {
+            printf("Enter a%d%d: ", i += 1, j += 1);
+            scanf("%d", 0, sizeof(MATRIX_OBJ->MATRIX_BASE[i][j]));
+        }
+        
+    }
+    
+}
 
 #endif
