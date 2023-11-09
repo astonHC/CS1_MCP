@@ -19,16 +19,20 @@
 #else
 #define MATRIX_ARGS
 
-typedef struct 
+typedef struct MATRIX
 {
     int** MATRIX_BASE;
     int** RESULT[0];
+
+    int* MATRIX_1;
+    int* MATRIX_2;
 
     union CONTENTS
     {
         int ROWS;
         int COLUMNS;
-    };
+
+    } CONTENTS;
     
 } MATRIX;
 
