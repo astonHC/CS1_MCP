@@ -15,40 +15,27 @@
 
 #ifdef MATRIX_ARGS
 
-static MATRIX* MATRIX_OBJ;
-
 /* ESTABLISH THE AMOUNT OF ELEMENTS INSIDE OF THE MATRIX */
 /* BASED ON USER INPUTS */
 
-static void GET_MATRIX_ELEMENTS(int** MATRIX, int ROW, int COLUMN)
+static void GET_MATRIX_ELEMENTS(MATRIX* MATRIX)
 {
-    printf("\n Enter Matrix Elements: /n");
+    printf("Enter the number of rows for the Matrix: ");
+    scanf("%d", sizeof(&MATRIX->ROWS));
 
-    for (int i = 0; i < MATRIX_OBJ->CONTENTS.ROWS; i++)
+    printf("Enter the number of columns for the Matrix: ");
+    scanf("%d", sizeof(&MATRIX->COLUMNS));
+
+    printf("\n Enter Matrix Elements: /n");
+    for (int i = 0; i < MATRIX->ROWS; i++)
     {
-        for (int j = 0; j < MATRIX_OBJ->CONTENTS.COLUMNS; j++)
+        for (int j = 0; j < MATRIX->COLUMNS; j++)
         {
-            printf("Enter a%d%d: ", i += 1, j += 1);
-            scanf("%d", 0, sizeof(MATRIX_OBJ->MATRIX_BASE[i][j]));
+            printf("Element [%d][%d]: ", i += 1, j += 1);
+            scanf("%d", 0, sizeof(&MATRIX->DATA[i][j]));
         }
         
     }   
-}
-
-/* MULTIPLY THE CORRESPONDENCE BASED ON THE USER INPUTS */
-
-static void MULTIPLY_MATRICES()
-{
-    for (int i = 0; i < MATRIX_OBJ->CONTENTS.ROWS; i++)
-    {
-        for (int j = 0; j < MATRIX_OBJ->CONTENTS.COLUMNS; j++)
-        {
-            for (int k = 0; k < MATRIX_OBJ->CONTENTS.COLUMNS; k++)
-            {
-                MATRIX_OBJ->RESULT[i][j] += MATRIX_OBJ->MATRIX_1[i][k] * MATRIX_OBJ->MATRIX_2[k][j];
-            }
-        }
-    }
 }
 
 #endif
